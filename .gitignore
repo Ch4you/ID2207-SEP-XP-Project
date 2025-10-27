@@ -1,0 +1,22 @@
+# .gitignore
+
+# Python virtual environment
+venv/
+env/
+*.env
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Pytest cache
+.pytest_cache/
+
+# IDE/Editor configuration files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

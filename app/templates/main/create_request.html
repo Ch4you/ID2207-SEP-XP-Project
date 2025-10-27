@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Create New Event Request{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <label for="client_name">Client Name</label>
+    <input type="text" name="client_name" id="client_name" required>
+
+    <label for="event_type">Event Type</label>
+    <input type="text" name="event_type" id="event_type" placeholder="e.g. Conference, Workshop" required>
+
+    <label for="from_date">From Date</label>
+    <input type="date" name="from_date" id="from_date" required>
+
+    <label for="to_date">To Date</label>
+    <input type="date" name="to_date" id="to_date" required>
+
+    <label for="expected_attendees">Expected Attendees</label>
+    <input type="number" name="expected_attendees" id="expected_attendees" value="50">
+
+    <label for="expected_budget">Expected Budget</label>
+    <input type="number" name="expected_budget" id="expected_budget" value="10000">
+
+    <label>Preferences</label>
+    <div>
+        <input type="checkbox" name="pref_decorations" id="pref_decorations"> <label for="pref_decorations">Decorations</label><br>
+        <input type="checkbox" name="pref_parties" id="pref_parties"> <label for="pref_parties">Parties</label><br>
+        <input type="checkbox" name="pref_photos" id="pref_photos"> <label for="pref_photos">Photos/Filming</label><br>
+        <input type="checkbox" name="pref_breakfast" id="pref_breakfast"> <label for="pref_breakfast">Breakfast/Lunch/Dinner</label><br>
+        <input type="checkbox" name="pref_drinks" id="pref_drinks"> <label for="pref_drinks">Soft/Hot Drinks</label><br>
+    </div>
+
+    <input type="submit" value="Create and Route Request" class="button">
+</form>
+{% endblock %}

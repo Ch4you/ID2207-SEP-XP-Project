@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Dashboard{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <h2>Welcome, {{ g.user['name'] }}!</h2>
+
+  <h3>Your Actions:</h3>
+  <ul>
+    
+    {% if g.user.role == 'CustomerServiceOfficer' %}
+      <li><a href="{{ url_for('main.create_request') }}">Create New Event Request</a></li> {% endif %}
+    
+    {% if g.user.role == 'SeniorCustomerServiceOfficer' %}
+      <li><a href="#">Review Pending Requests</a></li> {% endif %}
+
+    {% if g.user.role == 'FinancialManager' %}
+      <li><a href="#">Review Budgets</a></li> <li><a href="#">Manage Financial Requests</a></li> {% endif %}
+
+    {% if g.user.role == 'ProductionManager' or g.user.role == 'ServiceManager' %}
+      <li><a href="#">Assign Tasks to Sub-teams</a></li> <li><a href="#">Submit Staffing Request to HR</a></li> <li><a href="#">Submit Financial Request</a></li> {% endif %}
+    
+    {% if g.user.role == 'HRTeam' %}
+       <li><a href="#">Process Staffing Requests</a></li> {% endif %}
+
+  </ul>
+  
+  <hr>
+  <h3>All Pending Event Requests:</h3>
+  <ol>
+    {% for req in g.db.event_requests %}
+        <li>
+            <strong>{{ req.client_name }} ({{ req.event_type }})</strong> - 
+            Status: {{ req.status }}
+        </li>
+    {% else %}
+        <li>No requests yet.</li>
+    {% endfor %}
+  </ol>
+
+{% endblock %}
