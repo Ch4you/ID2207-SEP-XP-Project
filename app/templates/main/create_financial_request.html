@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Financial Request{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="department" class="form-label">Requesting Department</label>
+        <select name="department" id="department" class="form-input">
+            <option value="{{ g.user.role }}">{{ g.user.role }}</option>
+            <option value="Production">Production</option>
+            <option value="Services">Services</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="required_amount" class="form-label">Required Amount (SEK)</label>
+        <input type="number" name="required_amount" id="required_amount" class="form-input" placeholder="e.g. 5000" required>
+    </div>
+    <div class="form-group">
+        <label for="reason" class="form-label">Reason</label>
+        <textarea name="reason" id="reason" class="form-input" rows="5" placeholder="e.g. Need better quality lights for decorations" required></textarea>
+    </div>
+
+    <input type="submit" value="Submit Request to FM" class="form-button">
+</form>
+{% endblock %}

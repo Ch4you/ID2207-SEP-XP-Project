@@ -1,0 +1,380 @@
+/* * ========================================
+ * v5 - 最终完整版
+ * ========================================
+ */
+
+/* 1. 全局变量和重置 */
+:root {
+    --primary-color: #007ab7;
+    --primary-hover: #005f8f;
+    --primary-light: rgba(0, 122, 183, 0.1);
+    --text-color: #2d3748;
+    --text-light: #718096;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --error-bg: #ffebee;
+    --error-text: #c62828;
+    --error-border: #ef9a9a;
+    --success-bg: #e8f5e9;
+    --success-text: #2e7d32;
+    --success-border: #a5d6a7;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Body 和字体 */
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* 3. 导航栏 (Nav) */
+nav {
+    background: var(--card-bg);
+    padding: 1em 2em;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+}
+nav a, nav span {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+nav a:hover { color: var(--primary-color); }
+nav li span { font-weight: 600; color: var(--text-color); }
+
+/* 4. 主要内容区域 */
+.main-content {
+    padding: 2em;
+}
+
+/* 4a. 仪表盘 (Dashboard) 的内容容器 */
+.content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5em;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 4b. 登录页 (Login) 的容器 */
+.auth-container {
+    max-width: 420px;
+    margin: 2em auto;
+    padding: 2.5em;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+/* 5. 表单 (Forms) - Component Classes */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25em;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35em;
+}
+.form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* 6. 输入框 (Inputs) */
+.form-input,
+textarea.form-input,
+select.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+}
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+.checkbox-group label {
+    font-weight: normal;
+}
+
+/* 7. 按钮 (Buttons) */
+.form-button {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+.form-button:hover {
+    background-color: var(--primary-hover);
+}
+.form-button.button-danger {
+    background-color: var(--error-text);
+}
+.form-button.button-danger:hover {
+    background-color: #a02020;
+}
+.form-button-group {
+    display: flex;
+    gap: 1em;
+    margin-top: 1em;
+}
+
+/* 8. 提醒/Flash消息 */
+.flash {
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+.flash.error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
+}
+.flash.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
+}
+
+/* 9. 链接和列表 */
+h1, h2, h3 { margin-bottom: 0.75em; font-weight: 600; }
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.25rem; }
+hr { border: none; border-top: 1px solid var(--border-color); margin: 2em 0; }
+ul li a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+ul li a:hover { text-decoration: underline; }
+ol li { margin-left: 1.2em; }
+
+/* 10. Dashboard 专属样式 */
+.welcome-header {
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--border-color);
+}
+.text-light {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* 11. 动作列表 (Action List) */
+.action-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5em 0;
+}
+.action-list li {
+    padding: 1em 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.action-list li:first-child {
+    padding-top: 0.5em;
+}
+.action-list li:last-child {
+    border-bottom: none;
+}
+.action-list-empty {
+    color: var(--text-light);
+    font-style: italic;
+    border-bottom: none !important;
+}
+.action-list a {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+.action-list a:hover {
+    color: var(--primary-hover);
+}
+
+/* 12. 请求列表 (Request List) */
+.request-list {
+    margin-top: 1.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.request-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    padding: 1.25em;
+    background: #fafafa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+.request-details {
+    display: flex;
+    flex-direction: column;
+}
+.request-details strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.request-details strong a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+.request-details strong a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* 13. 状态徽章 (Status Badge) */
+.request-status-badge {
+    padding: 0.25em 0.75em;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    
+    background-color: #e0e0e0;
+    color: #424242;
+}
+.status-submitted {
+    background-color: #fffde7;
+    color: #f57f17;
+}
+.status-underreview {
+    background-color: var(--primary-light);
+    color: var(--primary-hover);
+}
+.status-approved {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+.status-inprogress {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+}
+.status-rejected {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+}
+.status-closed {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+.status-planned {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+.status-assigned {
+    background-color: #fffde7;
+    color: #f57f17;
+}
+.status-completed {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+.status-resolved {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+
+
+/* 14. 详情页布局 (Detail Pages) */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5em;
+    margin-bottom: 2em;
+}
+.detail-card {
+    background: #fafafa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5em;
+}
+.detail-card.full-width {
+    grid-column: 1 / -1;
+}
+.detail-card h3 {
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+.detail-card p {
+    margin-bottom: 0.5em;
+}
+.detail-card p strong {
+    color: var(--text-color);
+    margin-right: 0.5em;
+}
+
+/* 15. 相关操作 (Related Actions) */
+.related-actions {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+.related-actions .form-button {
+    width: auto; /* 让按钮根据内容自适应宽度 */
+}

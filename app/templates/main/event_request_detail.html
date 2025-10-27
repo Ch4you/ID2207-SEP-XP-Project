@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Event Request #{{ req.id }}: {{ req.client_name }}{% endblock %}</h1>
+  <span class="request-status-badge status-{{ req.status | lower }}">{{ req.status }}</span>
+{% endblock %}
+
+{% block content %}
+    <div class="detail-grid">
+        <div class="detail-card">
+            <h3>Event Details</h3>
+            <p><strong>Client:</strong> {{ req.client_name }}</p>
+            <p><strong>Event Type:</strong> {{ req.event_type }}</p>
+            <p><strong>Dates:</strong> {{ req.from_date }} to {{ req.to_date }}</p>
+            <p><strong>Attendees:</strong> {{ req.expected_attendees }}</p>
+        </div>
+        <div class="detail-card">
+            <h3>Financials</h3>
+            <p><strong>Expected Budget:</strong> {{ req.expected_budget }} SEK</p>
+            <p><strong>FM Feedback:</strong> {{ req.feedback_fm | default('N/A', true) }}</p>
+            <p><strong>AM Feedback:</strong> {{ req.feedback_am | default('N/A', true) }}</p>
+        </div>
+        <div class="detail-card full-width">
+            <h3>Preferences</h3>
+            <ul>
+                {% for pref in req.preferences %}
+                <li>{{ pref }}</li>
+                {% else %}
+                <li>No specific preferences listed.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <hr>
+    
+    <div class="action-form">
+        <h3>Take Action</h3>
+        <form method="post" action="{{ url_for('main.event_request_action', req_id=req.id) }}">
+            <div class="form-group">
+                <label for="feedback" class="form-label">Feedback / Comments</label>
+                <textarea name="feedback" id="feedback" class="form-input"></textarea>
+            </div>
+            
+            {% if g.user.role in ['SeniorCustomerServiceOfficer', 'FinancialManager'] and req.status == 'UnderReview' %}
+                <button type="submit" name="action" value="forward_to_am" class="form-button">Forward to Admin Manager</button>
+                <button type="submit" name="action" value="reject" class="form-button button-danger">Reject Request</button>
+            
+            {% elif g.user.role == 'AdministrationManager' and req.status == 'Approved' %}
+                <button type="submit" name="action" value="approve" class="form-button">Approve & Start Event</button>
+                <button type="submit" name="action" value="reject" class="form-button button-danger">Reject Request</button>
+
+            {% elif req.status == 'InProgress' %}
+                <button type="submit" name="action" value="finalize" class="form-button">Finalize & Close Event</button>
+            
+            {% else %}
+                <p class="text-light">No actions available for you on this request (Status: {{ req.status }}).</p>
+            {% endif %}
+        </form>
+    </div>
+    
+    <hr>
+    
+    {% if g.user.role in ['ProductionManager', 'ServiceManager'] and req.status in ['InProgress', 'Approved'] %}
+    <div class="related-actions">
+        <h3>Manager Actions (PM/SM)</h3>
+        <a href="{{ url_for('main.create_task', event_id=req.id) }}" class="form-button">Create New Task</a>
+        <a href="{{ url_for('main.create_staffing_request', event_id=req.id) }}" class="form-button">Request Staffing</a>
+        <a href="{{ url_for('main.create_financial_request', event_id=req.id) }}" class="form-button">Request Budget Adjustment</a>
+    </div>
+    {% endif %}
+
+{% endblock %}

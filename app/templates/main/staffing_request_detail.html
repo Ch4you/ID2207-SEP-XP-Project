@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Staffing Request #{{ req.id }}: {{ req.job_title }}{% endblock %}</h1>
+  <span class="request-status-badge status-{{ req.status | lower }}">{{ req.status }}</span>
+{% endblock %}
+
+{% block content %}
+    <div class="detail-grid">
+        <div class="detail-card full-width">
+            <h3>Request Details</h3>
+            <p><strong>Department:</strong> {{ req.department }}</p>
+            <p><strong>Job Title:</strong> {{ req.job_title }}</p>
+            <p><strong>Description:</strong> {{ req.job_description }}</p>
+            <p><strong>Requested By:</strong> {{ req.requested_by }}</p>
+        </div>
+        <div class="detail-card full-width">
+            <h3>HR Decision</h3>
+            <p><strong>Status:</strong> {{ req.status }}</p>
+            <p><strong>Decision:</strong> {{ req.hr_decision | default('N/A', true) }}</p>
+            <p><strong>Feedback:</strong> {{ req.hr_feedback | default('N/A', true) }}</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    {% if g.user.role == 'HRTeam' and req.status == 'Submitted' %}
+    <div class="action-form">
+        <h3>Process Request</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="decision" class="form-label">Decision</label>
+                <select name="decision" id="decision" class="form-input">
+                    <option value="Hiring">Approve (Internal Hiring)</option>
+                    <option value="Outsourcing">Approve (Outsourcing)</option>
+                    <option value="Rejected">Reject</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="feedback" class="form-label">Feedback / Comments</label>
+                <textarea name="feedback" id="feedback" class="form-input"></textarea>
+            </div>
+            <input type="submit" value="Process Request" class="form-button">
+        </form>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Create New Event Request{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    
+    <div class="form-group">
+        <label for="client_name" class="form-label">Client Name</label> <input type="text" name="client_name" id="client_name" class="form-input" required>
+    </div>
+
+    <div class="form-group">
+        <label for="event_type" class="form-label">Event Type</label> <input type="text" name="event_type" id="event_type" class="form-input" placeholder="e.g. Conference, Workshop" required>
+    </div>
+
+    <div class="form-group">
+        <label for="from_date" class="form-label">From Date</label> <input type="date" name="from_date" id="from_date" class="form-input" required>
+    </div>
+
+    <div class="form-group">
+        <label for="to_date" class="form-label">To Date</label> <input type="date" name="to_date" id="to_date" class="form-input" required>
+    </div>
+
+    <div class="form-group">
+        <label for="expected_attendees" class="form-label">Expected Attendees</label> <input type="number" name="expected_attendees" id="expected_attendees" class="form-input" value="50">
+    </div>
+
+    <div class="form-group">
+        <label for="expected_budget" class="form-label">Expected Budget</label> <input type="number" name="expected_budget" id="expected_budget" class="form-input" value="10000">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Preferences</label> <div class="checkbox-group">
+            <input type="checkbox" name="preferences" id="pref_decorations" value="Decorations"> <label for="pref_decorations">Decorations</label><br>
+            <input type="checkbox" name="preferences" id="pref_parties" value="Parties"> <label for="pref_parties">Parties</label><br>
+            <input type="checkbox" name="preferences" id="pref_photos" value="Photos"> <label for="pref_photos">Photos/Filming</label><br>
+            <input type="checkbox" name="preferences" id="pref_breakfast" value="Food"> <label for="pref_breakfast">Breakfast/Lunch/Dinner</label><br>
+            <input type="checkbox" name="preferences" id="pref_drinks" value="Drinks"> <label for="pref_drinks">Soft/Hot Drinks</label><br>
+        </div>
+    </div>
+
+    <input type="submit" value="Create and Route Request" class="form-button">
+</form>
+{% endblock %}
