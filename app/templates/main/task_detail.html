@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Task #{{ task.id }}: {{ task.title }}{% endblock %}</h1>
+  <span class="request-status-badge status-{{ task.status | lower }}">{{ task.status }}</span>
+{% endblock %}
+
+{% block content %}
+    <div class="detail-grid">
+        <div class="detail-card full-width">
+            <h3>Task Details</h3>
+            <p><strong>Assigned To:</strong> {{ task.assigned_to_team }}</p>
+            <p><strong>Description:</strong> {{ task.description | default('N/A', true) }}</p>
+            <p><strong>Created By:</strong> {{ task.created_by }}</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    {% if task.plan %}
+    <div class="plan-details">
+        <h3>Plan Submitted</h3>
+        <div class.detail-card">
+            <p><strong>Details:</strong> {{ task.plan.details }}</p>
+            <p><strong>Resources:</strong> {{ task.plan.resources_needed }}</p>
+            <p><strong>Extra Budget:</strong> {{ task.plan.budget_needs }} SEK</p>
+            <p><strong>Submitted By:</strong> {{ task.plan.submitted_by }} at {{ task.plan.timestamp }}</p>
+        </div>
+    </div>
+    
+    {% elif g.user.role == 'SubTeamLeader' and task.status == 'Assigned' %}
+    <div class="action-form">
+        <h3>Submit Your Plan</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="details" class="form-label">Plan Details</label>
+                <textarea name="details" id="details" class="form-input" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="resources_needed" class="form-label">Resources Needed</label>
+                <textarea name="resources_needed" id="resources_needed" class="form-input" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="budget_needs" class="form-label">Extra Budget Required (SEK)</label>
+                <input type="number" name="budget_needs" id="budget_needs" class="form-input" value="0" required>
+            </div>
+            <input type="submit" value="Submit Plan" class="form-button">
+        </form>
+    </div>
+    {% endif %}
+
+{% endblock %}

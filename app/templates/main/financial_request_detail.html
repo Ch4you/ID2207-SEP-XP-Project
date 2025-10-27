@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Financial Request #{{ req.id }}{% endblock %}</h1>
+  <span class="request-status-badge status-{{ req.status | lower }}">{{ req.status }}</span>
+{% endblock %}
+
+{% block content %}
+    <div class="detail-grid">
+        <div class="detail-card full-width">
+            <h3>Request Details</h3>
+            <p><strong>Department:</strong> {{ req.department }}</p>
+            <p><strong>Amount:</strong> {{ req.required_amount }} SEK</p>
+            <p><strong>Reason:</strong> {{ req.reason }}</p>
+            <p><strong>Requested By:</strong> {{ req.requested_by }}</p>
+        </div>
+        <div class="detail-card full-width">
+            <h3>FM Decision</h3>
+            <p><strong>Status:</strong> {{ req.status }}</p>
+            <p><strong>Feedback:</strong> {{ req.fm_feedback | default('N/A', true) }}</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    {% if g.user.role == 'FinancialManager' and req.status == 'Submitted' %}
+    <div class="action-form">
+        <h3>Process Request</h3>
+        <form method="post">
+            <div class="form-group">
+                <label for="feedback" class="form-label">Feedback / Comments</label>
+                <textarea name="feedback" id="feedback" class="form-input"></textarea>
+            </div>
+            <div class="form-button-group">
+                <button type="submit" name="action" value="approve" class="form-button">Approve Request</button>
+                <button type="submit" name="action" value="reject" class="form-button button-danger">Reject Request</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+{% endblock %}

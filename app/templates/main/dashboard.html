@@ -1,43 +1,72 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Dashboard{% endblock %}</h1>
+  <div class="welcome-header">
+    <h1>Welcome, {{ g.user['name'] }}!</h1>
+    <p class="text-light">Role: {{ g.user['role'] }}</p>
+  </div>
 {% endblock %}
 
 {% block content %}
-  <h2>Welcome, {{ g.user['name'] }}!</h2>
 
-  <h3>Your Actions:</h3>
-  <ul>
-    
-    {% if g.user.role == 'CustomerServiceOfficer' %}
-      <li><a href="{{ url_for('main.create_request') }}">Create New Event Request</a></li> {% endif %}
-    
-    {% if g.user.role == 'SeniorCustomerServiceOfficer' %}
-      <li><a href="#">Review Pending Requests</a></li> {% endif %}
-
-    {% if g.user.role == 'FinancialManager' %}
-      <li><a href="#">Review Budgets</a></li> <li><a href="#">Manage Financial Requests</a></li> {% endif %}
-
-    {% if g.user.role == 'ProductionManager' or g.user.role == 'ServiceManager' %}
-      <li><a href="#">Assign Tasks to Sub-teams</a></li> <li><a href="#">Submit Staffing Request to HR</a></li> <li><a href="#">Submit Financial Request</a></li> {% endif %}
-    
-    {% if g.user.role == 'HRTeam' %}
-       <li><a href="#">Process Staffing Requests</a></li> {% endif %}
-
-  </ul>
-  
-  <hr>
-  <h3>All Pending Event Requests:</h3>
-  <ol>
-    {% for req in g.db.event_requests %}
-        <li>
-            <strong>{{ req.client_name }} ({{ req.event_type }})</strong> - 
-            Status: {{ req.status }}
-        </li>
+  <h2>My Pending Tasks</h2>
+  <ul class="action-list"> 
+    {% for task in my_tasks %}
+      <li>
+        {# *FIX*: Use __class__.__name__ to check the object's type #}
+        {% if task.__class__.__name__ == 'EventPlanningRequest' %}
+          <a href="{{ url_for('main.event_request_detail', req_id=task.id) }}">
+            Review Event: <strong>{{ task.client_name }}</strong>
+          </a>
+        {% elif task.__class__.__name__ == 'Task' %}
+          <a href="{{ url_for('main.task_detail', task_id=task.id) }}">
+            Submit Plan for Task: <strong>{{ task.title }}</strong>
+          </a>
+        {% elif task.__class__.__name__ == 'StaffingRequest' %}
+          <a href="{{ url_for('main.staffing_request_detail', req_id=task.id) }}">
+            Process Staffing Request: <strong>{{ task.job_title }}</strong>
+          </a>
+        {% elif task.__class__.__name__ == 'FinancialRequest' %}
+          <a href="{{ url_for('main.financial_request_detail', req_id=task.id) }}">
+            Process Financial Request: <strong>{{ task.required_amount }} SEK</strong>
+          </a>
+        {% else %}
+          <span>Unknown task type</span>
+        {% endif %}
+      </li>
     {% else %}
-        <li>No requests yet.</li>
+       <li class="action-list-empty">You have no pending tasks.</li>
     {% endfor %}
-  </ol>
+  </ul>
+
+  <h2>General Actions</h2>
+  <ul class="action-list"> 
+    {% if g.user.role == 'CustomerServiceOfficer' %}
+      <li><a href="{{ url_for('main.create_event_request') }}">Create New Event Request</a></li>
+    {% endif %}
+
+    {% if g.user.role not in ['CustomerServiceOfficer'] %}
+         <li class="action-list-empty">No general actions for your role.</li>
+    {% endif %}
+  </ul>
+
+  <hr>
+
+  <h2>All Event Requests (All Statuses)</h2>
+  <div class="request-list">
+    {% for req in g.db.event_requests %}
+        <div class="request-item">
+            <span class="request-status-badge status-{{ req.status | lower }}">{{ req.status }}</span>
+            <div class="request-details">
+                <strong><a href="{{ url_for('main.event_request_detail', req_id=req.id) }}">{{ req.client_name }} ({{ req.event_type }})</a></strong>
+                <span class="text-light">
+                    Created by: {{ req.created_by }} | Budget: {{ req.expected_budget }} SEK
+                </span>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-light">No requests yet.</p>
+    {% endfor %}
+  </div>
 
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Create New Task{% endblock %}</h1>
+  <p class="text-light">For Event: {{ event_req.client_name }}</p>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="title" class="form-label">Task Title</label>
+        <input type="text" name="title" id="title" class="form-input" placeholder="e.g. Decorations for Music Workshop" required>
+    </div>
+    <div class="form-group">
+        <label for="assigned_to_team" class="form-label">Assign To Team</label>
+        <select name="assigned_to_team" id="assigned_to_team" class="form-input">
+            <option value="Decorations">Decorations</option>
+            <option value="Photographer">Photographer</option>
+            <option value="Audio">Audio</option>
+            <option value="Chef">Chef</option>
+            <option value="Waiter">Waiter</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="description" class="form-label">Description / Details</label>
+        <textarea name="description" id="description" class="form-input" rows="5"></textarea>
+    </div>
+
+    <input type="submit" value="Create and Assign Task" class="form-button">
+</form>
+{% endblock %}

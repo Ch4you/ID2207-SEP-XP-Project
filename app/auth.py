@@ -62,16 +62,23 @@ def login_required(view):
     return wrapped_view
 
 # 角色检查装饰器 (用于实现HW4的访问控制)
-def role_required(role_name):
+def role_required(role_names): # 将参数名改为 role_names 以更好地表示可能是一个列表
     def decorator(view):
         @functools.wraps(view)
         def wrapped_view(**kwargs):
             if g.user is None:
                 return redirect(url_for('auth.login'))
             # 检查角色是否匹配
-            if g.user['role'] != role_name:
-                flash(f"Access denied. You must be a {role_name}.")
+            # 确保 role_names 始终是一个列表，以便进行一致的检查
+            if not isinstance(role_names, list):
+                allowed_roles = [role_names]
+            else:
+                allowed_roles = role_names
+
+            if g.user['role'] not in allowed_roles:
+                # 改进 flash 消息，以适应单个角色和多个角色的情况
+                flash(f"Access denied. You must be one of the following roles: {', '.join(allowed_roles)}." if len(allowed_roles) > 1 else f"Access denied. You must be a {allowed_roles[0]}.", "error")
                 return redirect(url_for('index')) # 重定向回主页
             return view(**kwargs)
-        return decorator
-    return role_required
+        return wrapped_view # 修正：这里应该返回 wrapped_view 函数
+    return decorator # 修正：这里应该返回实际的装饰器函数

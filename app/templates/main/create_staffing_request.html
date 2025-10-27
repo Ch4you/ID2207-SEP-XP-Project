@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Staffing Request{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="department" class="form-label">Requesting Department</label>
+        <select name="department" id="department" class="form-input">
+            <option value="{{ g.user.role }}">{{ g.user.role }}</option>
+            <option value="Production">Production</option>
+            <option value="Services">Services</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="job_title" class="form-label">Job Title</label>
+        <input type="text" name="job_title" id="job_title" class="form-input" placeholder="e.g. Graphic Designer" required>
+    </div>
+    <div class="form-group">
+        <label for="job_description" class="form-label">Job Description / Justification</label>
+        <textarea name="job_description" id="job_description" class="form-input" rows="5" required></textarea>
+    </div>
+
+    <input type="submit" value="Submit Request to HR" class="form-button">
+</form>
+{% endblock %}
