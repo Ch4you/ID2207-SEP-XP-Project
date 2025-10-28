@@ -6,33 +6,122 @@
     <title>{% block title %}Welcome{% endblock %} | SEP Internal System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body style="--app-bg-url-light: url('{{ url_for('static', filename='bg-light.jpg') }}'); --app-bg-url-dark: url('{{ url_for('static', filename='bg-dark.jpg') }}');">
     <nav>
-      <h1>SEP Internal System</h1>
-      <ul>
-        {% if g.user %}
-          <li><span>Logged in as: {{ g.user['name'] }} ({{ g.user['role'] }})</span></li>
-          <li><a href="{{ url_for('index') }}">Dashboard</a></li>
-          <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-        {% else %}
-          <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-        {% endif %}
-      </ul>
+      <div class="container nav-inner">
+        <h1>SEP Internal System</h1>
+        <ul>
+          {% if g.user %}
+            <li><span>Logged in as: {{ g.user['name'] }} ({{ g.user['role'] }})</span></li>
+            <li><a href="{{ url_for('index') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+          {% else %}
+            <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+          {% endif %}
+          <li>
+            <button id="themeToggle" class="theme-toggle" type="button">Toggle Theme</button>
+          </li>
+        </ul>
+      </div>
     </nav>
     
     <main class="main-content">
     {% block content_wrapper %}
-      <section class="content">
+      <section class="content container">
         <header>
           {% block header %}{% endblock %}
         </header>
-        {% for message in get_flashed_messages() %}
-          <div class="flash">{{ message }}</div>
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+          <div class="flash {{ category }}">{{ message }}</div>
         {% endfor %}
         {% block content %}{% endblock %}
       </section>
     {% endblock %}
     </main>
 
+    <script>
+      (function() {
+        var root = document.documentElement;
+        var key = 'sep-theme';
+        var saved = localStorage.getItem(key);
+        if (saved) { root.setAttribute('data-theme', saved); }
+        var btn = document.getElementById('themeToggle');
+        if (btn) {
+          btn.addEventListener('click', function() {
+            var current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            if (current === 'light') {
+              root.removeAttribute('data-theme');
+            } else {
+              root.setAttribute('data-theme', 'dark');
+            }
+            localStorage.setItem(key, current);
+          });
+        }
+        // Success morphing button handler (no backend change)
+        function wireAnimatedButtons() {
+          var buttons = document.querySelectorAll('.btn-anim[data-success]');
+          buttons.forEach(function(b){
+            // find closest form to validate before toggling
+            var form = b.closest('form');
+            b.addEventListener('click', function(e){
+              if (form && !form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                b.classList.remove('is-success');
+                b.classList.add('is-error');
+                // revert after 2s
+                setTimeout(function(){ b.classList.remove('is-error'); }, 2000);
+                // trigger native validation UI
+                form.reportValidity && form.reportValidity();
+                return;
+              }
+              // Special handling for login: show green check for 1s, then submit
+              if (b.hasAttribute('data-login') && form) {
+                e.preventDefault();
+                b.classList.remove('is-error');
+                b.classList.add('is-success');
+                setTimeout(function(){
+                  if (!b.dataset.submitted) {
+                    b.dataset.submitted = '1';
+                    // ensure clicked button name/value are submitted
+                    if (b.name && typeof b.value !== 'undefined') {
+                      var hidden = document.createElement('input');
+                      hidden.type = 'hidden';
+                      hidden.name = b.name;
+                      hidden.value = b.value;
+                      form.appendChild(hidden);
+                    }
+                    form.submit();
+                  }
+                }, 1000);
+                return;
+              }
+              // valid -> show success for 1s, then submit programmatically
+              if (form) {
+                e.preventDefault();
+                b.classList.remove('is-error');
+                b.classList.add('is-success');
+                setTimeout(function(){
+                  // guard: avoid multiple submits
+                  if (!b.dataset.submitted) {
+                    b.dataset.submitted = '1';
+                    // ensure clicked button name/value are submitted
+                    if (b.name && typeof b.value !== 'undefined') {
+                      var hidden2 = document.createElement('input');
+                      hidden2.type = 'hidden';
+                      hidden2.name = b.name;
+                      hidden2.value = b.value;
+                      form.appendChild(hidden2);
+                    }
+                    form.submit();
+                  }
+                }, 1000);
+              }
+            });
+          });
+        }
+        wireAnimatedButtons();
+      })();
+    </script>
 </body>
 </html>

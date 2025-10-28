@@ -61,7 +61,7 @@ def test_event_return_workflow(event_req):
 
 # ==================================
 # 2. Task & Plan TDD
-# (基于 HW3 Figure 7)
+
 # ==================================
 
 @pytest.fixture
@@ -92,7 +92,6 @@ def test_task_workflow(task):
 
 # ==================================
 # 3. StaffingRequest TDD
-# (基于 HW3 Figure 8)
 # ==================================
 
 @pytest.fixture

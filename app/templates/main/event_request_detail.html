@@ -43,15 +43,27 @@
             </div>
             
             {% if g.user.role in ['SeniorCustomerServiceOfficer', 'FinancialManager'] and req.status == 'UnderReview' %}
-                <button type="submit" name="action" value="forward_to_am" class="form-button">Forward to Admin Manager</button>
+                <button type="submit" name="action" value="forward_to_am" class="form-button btn-anim" data-success>
+                    <span class="btn-label">Forward to Admin Manager</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/></svg>
+                    <svg class="cross-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+                </button>
                 <button type="submit" name="action" value="reject" class="form-button button-danger">Reject Request</button>
             
             {% elif g.user.role == 'AdministrationManager' and req.status == 'Approved' %}
-                <button type="submit" name="action" value="approve" class="form-button">Approve & Start Event</button>
+                <button type="submit" name="action" value="approve" class="form-button btn-anim" data-success>
+                    <span class="btn-label">Approve & Start Event</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/></svg>
+                    <svg class="cross-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+                </button>
                 <button type="submit" name="action" value="reject" class="form-button button-danger">Reject Request</button>
 
             {% elif req.status == 'InProgress' %}
-                <button type="submit" name="action" value="finalize" class="form-button">Finalize & Close Event</button>
+                <button type="submit" name="action" value="finalize" class="form-button btn-anim" data-success>
+                    <span class="btn-label">Finalize & Close Event</span>
+                    <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/></svg>
+                    <svg class="cross-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+                </button>
             
             {% else %}
                 <p class="text-light">No actions available for you on this request (Status: {{ req.status }}).</p>

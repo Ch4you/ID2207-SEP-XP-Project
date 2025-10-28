@@ -6,8 +6,8 @@
       <h1>{% block title %}Log In{% endblock %}</h1>
     </header>
 
-    {% for message in get_flashed_messages() %}
-      <div class="flash">{{ message }}</div>
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+      <div class="flash {{ category }}">{{ message }}</div>
     {% endfor %}
 
     {% block content %}
@@ -21,7 +21,39 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" name="password" id="password" class="form-input" placeholder="e.g. '123'" required> </div>
       
-      <input type="submit" value="Log In" class="form-button"> </form>
+      <button type="submit" class="form-button btn-anim" data-success data-login>
+        <span class="btn-label">Log In</span>
+        <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/></svg>
+        <svg class="cross-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7L12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+      </button> </form>
     {% endblock %}
   </div>
 {% endblock %}
+<script>
+  (function(){
+    // 如果有 error 闪存，进入页面时显示红叉2秒
+    var hasErrorFlash = !!document.querySelector('.flash.error');
+    var btn = document.querySelector('.auth-container .btn-anim[data-login]');
+    if (hasErrorFlash && btn) {
+      btn.classList.add('is-error');
+      setTimeout(function(){ btn.classList.remove('is-error'); }, 2000);
+    }
+    // 拦截登录按钮：校验通过则先展示1秒绿勾再提交
+    if (btn) {
+      var form = btn.closest('form');
+      btn.addEventListener('click', function(e){
+        if (form && form.checkValidity()) {
+          e.preventDefault();
+          btn.classList.remove('is-error');
+          btn.classList.add('is-success');
+          setTimeout(function(){
+            if (!btn.dataset.submitted) {
+              btn.dataset.submitted = '1';
+              form.submit();
+            }
+          }, 1000);
+        }
+      });
+    }
+  })();
+</script>
