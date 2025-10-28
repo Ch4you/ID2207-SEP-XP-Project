@@ -19,7 +19,53 @@
     --success-bg: #e8f5e9;
     --success-text: #2e7d32;
     --success-border: #a5d6a7;
+    /* Background image controls */
+    --app-bg-url-light: none; /* set via inline style in base.html */
+    --app-bg-url-dark: none; /* set via inline style in base.html */
+    --app-bg-opacity: 0.25; /* overlay intensity in light mode */
+    --app-bg-blur: 0px; /* backdrop blur for the image */
 }
+
+/* Dark mode variables */
+[data-theme="dark"] {
+    --primary-color: #4db2ff;
+    --primary-hover: #88ccff;
+    --primary-light: rgba(136, 204, 255, 0.18);
+    --text-color: #e2e8f0;
+    --text-light: #a0aec0;
+    --bg-color: #0f172a;
+    --card-bg: #121a2e;
+    --border-color: #243248;
+    --error-bg: #3b1f23;
+    --error-text: #ff8a80;
+    --error-border: #6a2a32;
+    --success-bg: #1d3822;
+    --success-text: #81c784;
+    --success-border: #2a5a37;
+    --app-bg-opacity: 0.45; /* darker overlay for dark mode */
+}
+
+/* Dark mode component adjustments */
+[data-theme="dark"] body { background-color: var(--bg-color); color: var(--text-color); }
+[data-theme="dark"] .content,
+[data-theme="dark"] .auth-container,
+[data-theme="dark"] .detail-card,
+[data-theme="dark"] nav { background: var(--card-bg); }
+[data-theme="dark"] .request-item { background: #16233b; border-color: var(--border-color); }
+[data-theme="dark"] .form-input,
+[data-theme="dark"] textarea.form-input,
+[data-theme="dark"] select.form-input {
+    background-color: #0b1324;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .form-input::placeholder { color: #7a8797; }
+[data-theme="dark"] .form-label { color: var(--text-color); }
+[data-theme="dark"] .text-light { color: var(--text-light); }
+[data-theme="dark"] ul li a { color: var(--primary-color); }
+[data-theme="dark"] .request-details strong a { color: var(--text-color); }
+[data-theme="dark"] .flash.error { background-color: #3b1f23; color: var(--error-text); border-color: var(--error-border); }
+[data-theme="dark"] .flash.success { background-color: #1d3822; color: var(--success-text); border-color: var(--success-border); }
 
 html {
     box-sizing: border-box;
@@ -45,19 +91,46 @@ body {
     font-size: 1rem;
 }
 
+/* Global hero background image (non-intrusive) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(0,0,0, var(--app-bg-opacity)), rgba(0,0,0, var(--app-bg-opacity))),
+        var(--app-bg-url-light);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(var(--app-bg-blur));
+}
+
+/* Use dark background image when dark theme active */
+[data-theme="dark"] body::before {
+    background-image:
+        linear-gradient(rgba(0,0,0, var(--app-bg-opacity)), rgba(0,0,0, var(--app-bg-opacity))),
+        var(--app-bg-url-dark);
+}
+
 /* 3. 导航栏 (Nav) */
 nav {
     background: var(--card-bg);
-    padding: 1em 2em;
+    padding: 1em 0;
     border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 nav h1 {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), #00b4d8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 nav ul {
     list-style: none;
@@ -73,9 +146,21 @@ nav a, nav span {
 nav a:hover { color: var(--primary-color); }
 nav li span { font-weight: 600; color: var(--text-color); }
 
+/* Container to center content */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /* 4. 主要内容区域 */
 .main-content {
-    padding: 2em;
+    padding: 2em 0;
 }
 
 /* 4a. 仪表盘 (Dashboard) 的内容容器 */
@@ -85,7 +170,7 @@ nav li span { font-weight: 600; color: var(--text-color); }
     padding: 2.5em;
     background: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
 }
 
 /* 4b. 登录页 (Login) 的容器 */
@@ -132,6 +217,14 @@ select.form-input {
     background-color: #fff;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
+.form-input::-webkit-calendar-picker-indicator {
+    filter: invert(0%);
+    cursor: pointer;
+}
+[data-theme="dark"] .form-input::-webkit-calendar-picker-indicator {
+    filter: invert(100%) brightness(130%);
+    opacity: 0.9;
+}
 .form-input:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -142,9 +235,9 @@ textarea.form-input {
     min-height: 80px;
 }
 .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5em 1em;
 }
 .checkbox-group label {
     font-weight: normal;
@@ -162,7 +255,7 @@ textarea.form-input {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s ease, box-shadow 0.1s ease;
     margin-top: 1em;
     text-align: center;
     text-decoration: none;
@@ -170,6 +263,10 @@ textarea.form-input {
 }
 .form-button:hover {
     background-color: var(--primary-hover);
+}
+.form-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15) inset;
 }
 .form-button.button-danger {
     background-color: var(--error-text);
@@ -181,6 +278,64 @@ textarea.form-input {
     display: flex;
     gap: 1em;
     margin-top: 1em;
+}
+
+/* Animated success button */
+.btn-anim {
+    position: relative;
+    overflow: hidden;
+}
+.btn-anim .btn-label {
+    display: inline-block;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.btn-anim .check-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.btn-anim .cross-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.6);
+    opacity: 0;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.btn-anim.is-success {
+    background-color: var(--success-text);
+    color: #ffffff;
+    border-radius: 999px;
+}
+.btn-anim.is-success .btn-label {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+.btn-anim.is-success .check-icon {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+.btn-anim.is-error {
+    background-color: var(--error-text);
+    color: #ffffff;
+    border-radius: 999px;
+}
+.btn-anim.is-error .btn-label {
+    opacity: 0;
+    transform: translateY(6px);
+}
+.btn-anim.is-error .cross-icon {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(90deg) scale(1);
 }
 
 /* 8. 提醒/Flash消息 */
@@ -267,6 +422,7 @@ ol li { margin-left: 1.2em; }
     background: #fafafa;
     border: 1px solid var(--border-color);
     border-radius: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .request-details {
     display: flex;
@@ -283,6 +439,10 @@ ol li { margin-left: 1.2em; }
 .request-details strong a:hover {
     color: var(--primary-color);
     text-decoration: underline;
+}
+.request-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
 }
 
 /* 13. 状态徽章 (Status Badge) */
@@ -351,6 +511,7 @@ ol li { margin-left: 1.2em; }
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 1.5em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .detail-card.full-width {
     grid-column: 1 / -1;
@@ -368,6 +529,10 @@ ol li { margin-left: 1.2em; }
     color: var(--text-color);
     margin-right: 0.5em;
 }
+.detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
 
 /* 15. 相关操作 (Related Actions) */
 .related-actions {
@@ -377,4 +542,25 @@ ol li { margin-left: 1.2em; }
 }
 .related-actions .form-button {
     width: auto; /* 让按钮根据内容自适应宽度 */
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 6px 10px;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+.theme-toggle:hover {
+    color: var(--text-color);
+    border-color: var(--text-color);
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+    .content { padding: 1.25em; }
+    .auth-container { padding: 1.5em; }
 }
