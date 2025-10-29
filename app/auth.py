@@ -80,5 +80,5 @@ def role_required(role_names): # 将参数名改为 role_names 以更好地表�
                 flash(f"Access denied. You must be one of the following roles: {', '.join(allowed_roles)}." if len(allowed_roles) > 1 else f"Access denied. You must be a {allowed_roles[0]}.", "error")
                 return redirect(url_for('index')) # 重定向回主页
             return view(**kwargs)
-        return wrapped_view # 修正：这里应该返回 wrapped_view 函数
-    return decorator # 修正：这里应该返回实际的装饰器函数
+        return wrapped_view 
+    return decorator 
