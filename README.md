@@ -34,7 +34,7 @@ All team members **must** follow these steps to ensure a consistent development 
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/Ch4you/ID2207-SEP-XP-Project.git]
+git clone [the link to the repository ]
 cd ID2207-SEP-XP-Project
 ```
 ### 2. Create and Activate Virtual Environment
