@@ -10,7 +10,7 @@ def create_app():
     
     # 从环境变量加载配置
     app.config.from_mapping(
-        SECRET_KEY=os.environ.get('SECRET_KEY'),
+        SECRET_KEY = os.environ.get('SECRET_KEY') or 'a-default-secret-key',
         DEBUG=os.environ.get('FLASK_DEBUG') == '1'
     )
 
